@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ja">
+<link rel="icon" href="https://lh7-rt.googleusercontent.com/slidesz/AGV_vUctC95Tu99-RUGtSsRa7JCpKd1-JgUVm6J21aai3oFSZJuxSvV43A2n3IugfQwGGVyl8ACZxEdGCCj0lBs0HGvMbCgqYXDQV-28H9ovg29sICNOzaX5XCDpZTvtFH-jdakZ8U6LgFQDTStB-7e95u6U7j9hAg=nw?key=HN2h_traoN9V8eXyLO-uUA">
+<meta name="robots" content="noindex, nofollow">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Stock4500_Je11</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      color: #8a2be2;
+      margin-bottom: 10px;
+    }
+    .start-screen, .quiz-screen, .result-screen {
+      display: none;
+    }
+    .start-screen.active, .quiz-screen.active, .result-screen.active {
+      display: block;
+    }
+    .input-group {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 1.1em;
+    }
+    input[type="number"] {
+      padding: 12px;
+      font-size: 1.1em;
+      width: 70px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+    }
+    input[type="number"]:focus {
+      border-color: #962dff;
+      outline: none;
+    }
+    button {
+      margin: 10px 5px;
+      padding: 12px 30px;
+      background: #962dff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover:not(:disabled) {
+      background: #660099;
+    }
+    .progress {
+      margin: 15px 0;
+      font-size: 0.95em;
+      color: #7f8c8d;
+    }
+    .question {
+      font-size: 1.3em;
+      margin: 25px 0;
+      color: #34495e;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+    .options li {
+      margin: 10px auto;
+      max-width: 80%;
+    }
+    .options label {
+      display: block;
+      padding: 14px 20px; /* 左右パディング均等 */
+      background: #ecf0f1;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      text-align: center; /* 中央揃え */
+      font-weight: 500;
+    }
+    .options label:hover:not(.disabled) {
+    }
+    /* 丸を非表示 */
+    .options input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+    .options label.disabled {
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+    .correct-highlight {
+      background: #d5efdb !important;
+      border-color: #27ae60 !important;
+      color: #27ae60;
+    }
+    .incorrect-highlight {
+      background: #fadbd8 !important;
+      border-color: #e74c3c !important;
+      color: #e74c3c;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+      min-height: 2.4em;
+    }
+    .correct { color: #27ae60; }
+    .incorrect { color: #e74c3c; }
+    .final-score {
+      font-size: 1.6em;
+      margin: 20px 0;
+      color: #2c3e50;
+    }
+    .restart {
+      background: #95a5a6;
+    }
+    .restart:hover {
+      background: #7f8c8d;
+    }
+    .info {
+      font-size: 0.9em;
+      color: #7f8c8d;
+      margin-top: 10px;
+    }
+    .label {
+      color: #2c3e50;
+    }
+	    .social-link {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    .social-link a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #f8f9fa;
+      border: 2px solid #962dff;
+      border-radius: 8px;
+      color: #962dff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1em;
+      transition: all 0.2s ease;
+    }
+    .social-link a:hover {
+      background: #8a2be2;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(29, 161, 242, 0.2);
+    }
+	        /* キャンセルボタン */
+    .cancel-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #660099;
+      color: white;
+      padding: 8px 16px;
+      font-size: 0.9em;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- スタート画面 -->
+    <div id="startScreen" class="start-screen active">
+      <h2>Section1 動詞と文型</h2>
+      <p>出題する問題数を入力してください（1〜97）</p>
+      <div class="input-group">
+        <input type="number" id="questionCount" min="1" max="97" value="20" />
+      </div>
+      <button id="startBtn">クイズ開始</button>
+	        <div class="social-link">
+        <a href="https://stock4500-quiz.netlify.app/" rel="noopener">
+          ホームに戻る
+        </a></div>
+    </div>
+
+    <!-- クイズ画面 -->
+    <div id="quizScreen" class="quiz-screen">
+	            <!-- キャンセルボタン -->
+      <button class="cancel-btn" id="cancelBtn">キャンセル</button>
+      <div class="progress" id="progress">問題 1/5</div>
+      <div class="question" id="question">読み込み中...</div>
+      <ul class="options" id="options"></ul>
+      <div class="result" id="result"></div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="resultScreen" class="result-screen">
+      <h2>クイズ終了！</h2>
+      <div class="final-score" id="finalScore">得点: 0 / 0</div>
+      <div id="accuracy">正答率: 0%</div>
+      <button class="restart" onclick="location.reload()">もう一度挑戦</button>
+    </div>
+
+  </div>
+
+  <script>
+    // 問題データ
+    const quizData = [
+{ question: "mind", options: ["心/精神 気にする", "応募者", "真似する", "権限を与える"], correct: 0 },
+{ question: "far", options: ["遠い 遠くに", "君主制", "増える", "悲しむ"], correct: 0 },
+{ question: "farther", options: ["もっと遠い もっと遠くに", "ログオン・ログインする", "相談する，診てもらう/(辞書を)調べる", "逆説的に(言えば)"], correct: 0 },
+{ question: "farthest", options: ["最も遠い 最も遠くに", "もしかすると", "光沢", "怖がって"], correct: 0 },
+{ question: "further", options: ["さらに進んだ さらに(進んで)", "実は", "誤解", "結論を出す"], correct: 0 },
+{ question: "furthest", options: ["最も遠い 最も", "禁じる", "障害がある", "子犬"], correct: 0 },
+{ question: "much", options: ["はるかに", "やり過ぎる", "迷信", "敵意がある"], correct: 0 },
+{ question: "even", options: ["いっそう", "写真家", "レジ係", "すばやい"], correct: 0 },
+{ question: "still", options: ["静止した なおいっそう", "アップロードする", "きちんとした", "再建する"], correct: 0 },
+{ question: "mammal", options: ["哺乳類", "◯◯版", "締切が来た/〜することになっている", "砕ける"], correct: 0 },
+{ question: "neccessarily", options: ["必ず", "ぞっとさせる", "熟考する", "空ける"], correct: 0 },
+{ question: "altogether", options: ["完全に", "もし〜なら", "説明", "もひ〜なら"], correct: 0 },
+{ question: "completely", options: ["完全に", "谷", "大目に見る", "群れ"], correct: 0 },
+{ question: "given", options: ["〜を考慮すると", "混合(物)", "ガラスの天井", "うなずく"], correct: 0 },
+{ question: "concerning", options: ["〜に関して", "難しい", "和らぐ", "本物の"], correct: 0 },
+{ question: "behalf", options: ["利益", "不満に思わせる", "余剰", "美的な"], correct: 0 },
+{ question: "regard", options: ["みなす 考慮，関連", "旅行", "みなす 考慮，関連", "俗語，合言葉"], correct: 0 },
+{ question: "regardless", options: ["気にかけない", "悪夢", "いやがらせ", "厳しい"], correct: 0 },
+{ question: "prior", options: ["前の", "協力する", "詰め込み勉強をする 詰め込み教育", "教育"], correct: 0 },
+{ question: "though", options: ["〜だけれども だけれども", "終わらせる", "重荷となる", "からかう"], correct: 0 },
+{ question: "once", options: ["一度 いったん〜すると", "季節 味つけする", "死体", "本物の"], correct: 0 },
+{ question: "whereas", options: ["〜する一方で", "自尊心", "主要な 専攻する", "従服する"], correct: 0 },
+{ question: "whereas", options: ["〜するところで", "気晴らし", "〜に関して", "たいてい"], correct: 0 },
+{ question: "moment", options: ["瞬間", "食事", "仮説", "良心的な"], correct: 0 },
+{ question: "minute", options: ["瞬間 厳密な", "予算", "経度", "独立した，自立した"], correct: 0 },
+{ question: "instant", options: ["瞬間", "馬車", "貝類，甲殻類", "宿泊施設"], correct: 0 },
+{ question: "suppose", options: ["思う もし〜なら", "徐々に", "成し遂げる", "単位"], correct: 0 },
+{ question: "supposing", options: ["もし〜なら", "ストリーミング配信する", "要約 短い", "粉々に割る"], correct: 0 },
+{ question: "provided", options: ["もひ〜なら", "基準", "指示", "子孫"], correct: 0 },
+{ question: "providing", options: ["もし〜なら", "平均", "じっと考える", "海の"], correct: 0 },
+{ question: "case", options: ["場合", "余裕がある", "果てしなく", "際立った"], correct: 0 },
+{ question: "now", options: ["今", "すばやい", "放射性の", "生態"], correct: 0 },
+{ question: "notion", options: ["考え", "最初は", "すなわち", "構成する"], correct: 0 },
+{ question: "argument", options: ["主張", "(環境の)保護", "道", "決心する"], correct: 0 },
+{ question: "assertion", options: ["主張", "発見", "タンパク質", "渋滞にはまらせる"], correct: 0 },
+{ question: "assumption", options: ["仮定", "課題", "工場", "食器棚"], correct: 0 },
+{ question: "probability", options: ["可能性", "通知する", "証言", "疲れさせる"], correct: 0 },
+{ question: "prospect", options: ["見込み", "目新しい", "絶滅の危機に瀕した", "満足"], correct: 0 },
+{ question: "luggage", options: ["荷物(一式)", "怖がらせる", "本物の", "検査する"], correct: 0 },
+{ question: "clothing", options: ["衣類(全般)", "記念日", "やりがいのある", "嫌う"], correct: 0 },
+{ question: "equpment", options: ["装置類", "震える", "集める", "(注意などを)そらす"], correct: 0 },
+{ question: "paper", options: ["紙", "恐竜", "まねる", "レシピ/秘訣"], correct: 0 },
+{ question: "tuition", options: ["授業料", "バランスをとる", "仮想の", "実験室"], correct: 0 },
+{ question: "fee", options: ["報酬", "政府", "毒", "協力する"], correct: 0 },
+{ question: "fare", options: ["運賃", "戦略", "指示する", "紛失した"], correct: 0 },
+{ question: "fine", options: ["罰金 罰金を科する 立派な", "治す", "感謝", "行い"], correct: 0 },
+{ question: "toll", options: ["通行料金", "成功した", "有史以前の", "冒険"], correct: 0 },
+{ question: "none", options: ["1つも〜ない", "最終的な", "金額", "際立った"], correct: 0 },
+{ question: "sole", options: ["唯一の", "〜する一方で", "混ぜる", "変える"], correct: 0 },
+{ question: "certain", options: ["確信して/ある〜", "わい、", "福祉", "人類学"], correct: 0 },
+{ question: "present", options: ["出席している/現在の", "数多くの", "任命する", "育てる 後ろ"], correct: 0 },
+{ question: "sensible", options: ["分別がある", "ラップトップ型パソコン", "うらやむ", "狭い"], correct: 0 },
+{ question: "sensitive", options: ["敏感な", "威厳", "工学", "ビックデータ"], correct: 0 },
+{ question: "economic", options: ["経済の", "疑う(〜ではないかと思う)", "空ける", "裏切る"], correct: 0 },
+{ question: "economical", options: ["お得な", "症状", "モチベーション，動機", "横ばいになる"], correct: 0 },
+{ question: "literal", options: ["文字通りの", "仲間", "さまたげる", "中毒性の"], correct: 0 },
+{ question: "literacy", options: ["使いこなす能力", "(板などが)急な", "暴露する", "才能のある"], correct: 0 },
+{ question: "literate", options: ["読み書きできる", "季節 味つけする", "統計の", "限定する"], correct: 0 },
+{ question: "literary", options: ["文学の", "必要不可欠な", "憲法第9條", "魅了する"], correct: 0 },
+{ question: "industrious", options: ["勤勉な", "広範囲に渡る", "元気づける", "地質学者"], correct: 0 },
+{ question: "industrial", options: ["産業の", "栄養", "ミニチュア(小型の模型/縮小したもの)", "後で"], correct: 0 },
+{ question: "considerable", options: ["かなりの", "落胆させる，やる気をなくさせる", "最小限", "もろい"], correct: 0 },
+{ question: "considerate", options: ["思いやりがある", "産業の", "複製", "厳しい"], correct: 0 },
+{ question: "available", options: ["利用できる", "水で流す", "ほめる", "やり過ぎる"], correct: 0 },
+{ question: "negotiable", options: ["交渉できる", "死ぬ運命の", "衰える", "神経の"], correct: 0 },
+{ question: "affordable", options: ["手ごろな", "本物の", "登録する", "媒体，手段"], correct: 0 },
+{ question: "dependable", options: ["信頼性が高い", "ゆっくり動く", "安心させる", "ディスる(批判する)"], correct: 0 },
+{ question: "unforgettable", options: ["忘れられない", "目立つ", "妊婦の", "戦略"], correct: 0 },
+{ question: "remarkable", options: ["著しい", "年間の/例年の", "列", "すぐに"], correct: 0 },
+{ question: "applicable", options: ["当てはまる", "洗礼された", "忠告する", "同情/共感"], correct: 0 },
+{ question: "durable", options: ["長持ちする", "社会学", "認知症", "集中的な"], correct: 0 },
+{ question: "provable", options: ["証明できる", "家族", "衝動", "さらされること"], correct: 0 },
+{ question: "favorable", options: ["好意的な", "不釣り合い", "野菜", "別荘"], correct: 0 },
+{ question: "invisible", options: ["目に見えない", "任命する", "理論を立てる", "降伏する"], correct: 0 },
+{ question: "flexible", options: ["柔軟な", "検査する", "中古で/間接的に 中古の/間接的な", "しなさそう"], correct: 0 },
+{ question: "convenient", options: ["便利な", "疑って", "落胆させる，やる気をなくさせる", "粉々に割る"], correct: 0 },
+{ question: "another", options: ["別の", "ぎこちない/不器用な/気まずい", "関係/不安/関心を持たせる/心配させる", "骨盤"], correct: 0 },
+{ question: "furthermore", options: ["さらに", "温度計", "価値のある", "破裂する/急に始める"], correct: 0 },
+{ question: "additionally", options: ["加えて", "念入りに", "はるかに", "指定する"], correct: 0 },
+{ question: "similarly", options: ["同様に", "恥ずかしい思いをさせる", "上品", "廃れた"], correct: 0 },
+{ question: "consequently", options: ["結果として", "当てはまる/申し込む", "ビュッフェ(立場での食事)", "陸軍"], correct: 0 },
+{ question: "accordingly", options: ["それゆえ/それに応じて", "傷つける", "適度な", "加えて"], correct: 0 },
+{ question: "eventually", options: ["ついに", "軍の", "仕組み", "列島"], correct: 0 },
+{ question: "thus", options: ["このように/したがって", "馬車", "区別", "目の見えない"], correct: 0 },
+{ question: "namely", options: ["すなわち", "誤認する", "計画", "ぶつぶつ言う"], correct: 0 },
+{ question: "overseas", options: ["海外へ(で)", "やる気にさせる", "浸す", "重要である"], correct: 0 },
+{ question: "downtown", options: ["繁華街に", "殺虫剤", "企業", "不釣り合い"], correct: 0 },
+{ question: "lately", options: ["最近は", "変える", "削除する", "ユーロ(EU諸国の共通通貨単位)"], correct: 0 },
+{ question: "almost", options: ["もう少しで", "縮む", "竜巻(トルネード)", "合図"], correct: 0 },
+{ question: "nearly", options: ["もう少しで", "平らな", "構成要素", "目覚めている"], correct: 0 },
+{ question: "mostly", options: ["たいてい", "恐ろしい", "将来", "空ける"], correct: 0 },
+{ question: "somehow", options: ["何とかして", "ブームになる", "捕食/犠牲者", "主要な，重要な 校長"], correct: 0 },
+{ question: "perhaps", options: ["もしかすると", "記念碑", "調整する", "収容・宿泊できる"], correct: 0 },
+{ question: "meanwhile", options: ["その間に", "述べる", "手を振る，手を振って合図する", "細胞の/携帯電話式の"], correct: 0 },
+{ question: "instead", options: ["その代わりに", "においがする", "スレンダーな(スラッとした)", "逮捕する"], correct: 0 },
+{ question: "merely", options: ["単に", "プラグを抜く", "引き受ける/取りかかる", "素晴らしい"], correct: 0 },
+{ question: "so", options: ["とても だから", "そして/その時/それならば", "一時的な", "襲う"], correct: 0 },
+    ];
+
+    let totalQuestions = 5;
+    let currentQuestion = 0;
+    let score = 0;
+    let availableQuestions = [];
+    let selectedAnswer = null;
+    let currentCorrectIndex = -1;
+    let isAnswered = false; // 回答済みフラグ
+    let autoNextTimer = null; // 自動進行タイマー
+
+    const startScreen = document.getElementById('startScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const questionCountInput = document.getElementById('questionCount');
+    const startBtn = document.getElementById('startBtn');
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const resultEl = document.getElementById('result');
+    const progressEl = document.getElementById('progress');
+    const finalScoreEl = document.getElementById('finalScore');
+    const accuracyEl = document.getElementById('accuracy');
+
+    // 開始ボタン
+    startBtn.onclick = () => {
+      let input = parseInt(questionCountInput.value);
+      if (isNaN(input) || input < 1) input = 1;
+      if (input > quizData.length) input = quizData.length;
+      totalQuestions = input;
+
+      startScreen.classList.remove('active');
+      quizScreen.classList.add('active');
+
+      currentQuestion = 0;
+      score = 0;
+      availableQuestions = [...quizData];
+      loadQuestion();
+    };
+
+    // 問題読み込み
+    function loadQuestion() {
+      if (currentQuestion >= totalQuestions) {
+        showResult();
+        return;
+      }
+
+      // タイマークリア
+      if (autoNextTimer) clearTimeout(autoNextTimer);
+
+      const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+      const q = availableQuestions[randomIndex];
+
+      currentQuestion++;
+      questionEl.textContent = q.question;
+      progressEl.textContent = `問題 ${currentQuestion}/${totalQuestions}`;
+
+      // 選択肢シャッフル
+      const indices = [0, 1, 2, 3];
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      currentCorrectIndex = indices.indexOf(q.correct);
+
+      const optionIdBase = `option-${currentQuestion}-${Date.now()}`;
+      optionsEl.innerHTML = '';
+      indices.forEach((origIdx, shuffledIdx) => {
+        const id = `${optionIdBase}-${shuffledIdx}`;
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <label for="${id}">
+            <input type="radio" id="${id}" name="answer" value="${shuffledIdx}">
+            ${q.options[origIdx]}
+          </label>
+        `;
+        optionsEl.appendChild(li);
+      });
+
+    // キャンセルボタン
+    cancelBtn.onclick = () => {
+      if (confirm("クイズをキャンセルしますか？\n（進捗は保存されません）")) {
+        cancelQuiz();
+      }
+    };
+
+    // キャンセル処理
+    function cancelQuiz() {
+      if (autoNextTimer) clearTimeout(autoNextTimer);
+      quizScreen.classList.remove('active');
+      startScreen.classList.add('active');
+
+      // 状態リセット
+      currentQuestion = 0;
+      score = 0;
+      selectedQuestions = [];
+      selectedAnswer = null;
+      isAnswered = false;
+    }
+      // 状態リセット
+      isAnswered = false;
+      selectedAnswer = null;
+      resultEl.textContent = '';
+      resultEl.className = "result";
+
+      // 選択肢クリック → 即判定
+      document.querySelectorAll('input[name="answer"]').forEach(radio => {
+        radio.onchange = () => {
+          if (isAnswered) return;
+          isAnswered = true;
+          selectedAnswer = parseInt(radio.value);
+          judgeAnswer();
+        };
+      });
+
+      // 使用済み削除
+      availableQuestions.splice(randomIndex, 1);
+    }
+
+    // 回答判定
+    function judgeAnswer() {
+      // 選択肢無効化
+      document.querySelectorAll('input[name="answer"]').forEach(radio => {
+        radio.disabled = true;
+        radio.parentElement.classList.add('disabled');
+      });
+
+      const correctLabel = optionsEl.children[currentCorrectIndex].querySelector('label');
+      correctLabel.classList.add('correct-highlight');
+
+      if (selectedAnswer !== currentCorrectIndex) {
+        const selectedLabel = optionsEl.children[selectedAnswer].querySelector('label');
+        selectedLabel.classList.add('incorrect-highlight');
+      }
+
+      // 正誤表示
+      if (selectedAnswer === currentCorrectIndex) {
+        score++;
+        resultEl.textContent = "正解！";
+        resultEl.className = "result correct";
+      } else {
+        const correctText = correctLabel.textContent.trim();
+        resultEl.innerHTML = `不正解…<br>正解は「<strong>${correctText}</strong>」です。`;
+        resultEl.className = "result incorrect";
+      }
+
+      // 2秒後に次へ
+      autoNextTimer = setTimeout(() => {
+        loadQuestion();
+      }, 2000);
+    }
+
+    // 結果表示
+    function showResult() {
+      if (autoNextTimer) clearTimeout(autoNextTimer);
+      quizScreen.classList.remove('active');
+      resultScreen.classList.add('active');
+      const accuracy = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+      finalScoreEl.textContent = `得点: ${score} / ${totalQuestions}`;
+      accuracyEl.textContent = `正答率: ${accuracy}%`;
+    }
+  </script>
+
+</body>
+</html>
