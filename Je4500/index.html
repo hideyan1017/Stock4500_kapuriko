@@ -2563,7 +2563,57 @@
       finalScoreEl.textContent = `得点: ${score} / ${totalQuestions}`;
       accuracyEl.textContent = `正答率: ${accuracy}%`;
     }
-  </script>
+    // 保存用のキー名
+const STORAGE_KEY = 'stock4500_ej4500_settings';  // ページごとにユニークに
 
+// 数字を保存する関数
+function saveSettings() {
+  const settings = {
+    start: document.getElementById('startNum').value,  // 開始番号のinput ID
+    end: document.getElementById('endNum').value,      // 終了番号のinput ID
+    count: document.getElementById('questionCount').value  // 問題数のinput ID
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+}
+
+// 数字を復元する関数
+function loadSettings() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    const settings = JSON.parse(saved);
+    document.getElementById('startNum').value = settings.start || 1;
+    document.getElementById('endNum').value = settings.end || 4500;
+    document.getElementById('questionCount').value = settings.count || 10;
+  }
+}
+    // ページ読み込み時に復元
+window.addEventListener('load', loadSettings);
+
+// 入力欄変更時に保存
+[document.getElementById('startNum'), document.getElementById('endNum'), document.getElementById('questionCount')].forEach(input => {
+  input.addEventListener('input', saveSettings);  // タイプ中も保存
+  input.addEventListener('change', saveSettings); // フォーカス外れ時も保存
+});
+
+// クイズ開始ボタン押下時にも保存（念のため）
+document.getElementById('startBtn').addEventListener('click', saveSettings);
+  </script>
+<script>
+  // 既存のクイズデータ（例）
+  const quizData = [ /* 英単語データ */ ];
+
+  // 上記の保存・復元関数をここに追加
+
+  // 開始ボタン処理（例）
+  document.getElementById('startBtn').onclick = () => {
+    saveSettings();  // 保存実行
+    // 既存の開始ロジック...
+    let start = parseInt(document.getElementById('startNum').value);
+    // ... クイズ開始
+  };
+
+  // ページロード時の復元
+  window.addEventListener('load', loadSettings);
+</script>
 </body>
 </html>
