@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<link rel="icon" href="https://lh7-rt.googleusercontent.com/slidesz/AGV_vUctC95Tu99-RUGtSsRa7JCpKd1-JgUVm6J21aai3oFSZJuxSvV43A2n3IugfQwGGVyl8ACZxEdGCCj0lBs0HGvMbCgqYXDQV-28H9ovg29sICNOzaX5XCDpZTvtFH-jdakZ8U6LgFQDTStB-7e95u6U7j9hAg=nw?key=HN2h_traoN9V8eXyLO-uUA">
+<meta name="robots" content="noindex, nofollow">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Stock4500_Je11</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      color: #8a2be2;
+      margin-bottom: 10px;
+    }
+    .start-screen, .quiz-screen, .result-screen {
+      display: none;
+    }
+    .start-screen.active, .quiz-screen.active, .result-screen.active {
+      display: block;
+    }
+    .input-group {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 1.1em;
+    }
+    input[type="number"] {
+      padding: 12px;
+      font-size: 1.1em;
+      width: 70px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+    }
+    input[type="number"]:focus {
+      border-color: #962dff;
+      outline: none;
+    }
+    button {
+      margin: 10px 5px;
+      padding: 12px 30px;
+      background: #962dff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover:not(:disabled) {
+      background: #660099;
+    }
+    .progress {
+      margin: 15px 0;
+      font-size: 0.95em;
+      color: #7f8c8d;
+    }
+    .question {
+      font-size: 1.3em;
+      margin: 25px 0;
+      color: #34495e;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+    .options li {
+      margin: 10px auto;
+      max-width: 80%;
+    }
+    .options label {
+      display: block;
+      padding: 14px 20px; /* 左右パディング均等 */
+      background: #ecf0f1;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      text-align: center; /* 中央揃え */
+      font-weight: 500;
+    }
+    .options label:hover:not(.disabled) {
+    }
+    /* 丸を非表示 */
+    .options input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+    .options label.disabled {
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+    .correct-highlight {
+      background: #d5efdb !important;
+      border-color: #27ae60 !important;
+      color: #27ae60;
+    }
+    .incorrect-highlight {
+      background: #fadbd8 !important;
+      border-color: #e74c3c !important;
+      color: #e74c3c;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+      min-height: 2.4em;
+    }
+    .correct { color: #27ae60; }
+    .incorrect { color: #e74c3c; }
+    .final-score {
+      font-size: 1.6em;
+      margin: 20px 0;
+      color: #2c3e50;
+    }
+    .restart {
+      background: #95a5a6;
+    }
+    .restart:hover {
+      background: #7f8c8d;
+    }
+    .info {
+      font-size: 0.9em;
+      color: #7f8c8d;
+      margin-top: 10px;
+    }
+    .label {
+      color: #2c3e50;
+    }
+	    .social-link {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    .social-link a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #f8f9fa;
+      border: 2px solid #962dff;
+      border-radius: 8px;
+      color: #962dff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1em;
+      transition: all 0.2s ease;
+    }
+    .social-link a:hover {
+      background: #8a2be2;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(29, 161, 242, 0.2);
+    }
+	        /* キャンセルボタン */
+    .cancel-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #660099;
+      color: white;
+      padding: 8px 16px;
+      font-size: 0.9em;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- スタート画面 -->
+    <div id="startScreen" class="start-screen active">
+      <h2>Section4 語法</h2>
+      <p>出題する問題数を入力してください（1〜70）</p>
+      <div class="input-group">
+        <input type="number" id="questionCount" min="1" max="70" value="20" />
+      </div>
+      <button id="startBtn">クイズ開始</button>
+	        <div class="social-link">
+        <a href="https://stock4500-quiz.netlify.app/" rel="noopener">
+          ホームに戻る
+        </a></div>
+    </div>
+
+    <!-- クイズ画面 -->
+    <div id="quizScreen" class="quiz-screen">
+	            <!-- キャンセルボタン -->
+      <button class="cancel-btn" id="cancelBtn">キャンセル</button>
+      <div class="progress" id="progress">問題 1/5</div>
+      <div class="question" id="question">読み込み中...</div>
+      <ul class="options" id="options"></ul>
+      <div class="result" id="result"></div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="resultScreen" class="result-screen">
+      <h2>クイズ終了！</h2>
+      <div class="final-score" id="finalScore">得点: 0 / 0</div>
+      <div id="accuracy">正答率: 0%</div>
+      <button class="restart" onclick="location.reload()">もう一度挑戦</button>
+    </div>
+
+  </div>
+
+  <script>
+    // 問題データ
+    const quizData = [
+{ question: "convince", options: ["納得させる", "追いやる", "場所", "TEDトーク"], correct: 0 },
+{ question: "persuade", options: ["説得する", "農業", "ひざまずく", "展覧会"], correct: 0 },
+{ question: "warn", options: ["警告する", "美術館", "あいまいな", "(涙・血を)流す/(光を)当てる"], correct: 0 },
+{ question: "notify", options: ["通知する", "国内の", "(環境の)保護", "混雑"], correct: 0 },
+{ question: "inform", options: ["知らせる", "高める", "抑える", "敵"], correct: 0 },
+{ question: "assure", options: ["保証する", "タンパク質", "財産", "影響力がある"], correct: 0 },
+{ question: "deprive", options: ["奪う", "空ける", "等しい", "不便"], correct: 0 },
+{ question: "strip", options: ["剥ぎとる", "ひどく", "権威", "彫刻"], correct: 0 },
+{ question: "cure", options: ["治す", "行い", "(試合・論争などの)相手", "本来備わっている"], correct: 0 },
+{ question: "clear", options: ["片づける", "トーナメント(勝ち抜き形式の試合)", "タンパク質", "値する"], correct: 0 },
+{ question: "relieve", options: ["取り除く", "感染", "労働人口", "〜対…"], correct: 0 },
+{ question: "rid", options: ["取り除く", "急ぐこと", "悪化", "歩き回る"], correct: 0 },
+{ question: "furnish", options: ["備えつける", "遠足", "出場資格がない", "混雑"], correct: 0 },
+{ question: "feed", options: ["食べ物を与える", "行い", "〜になるつもりの", "学期"], correct: 0 },
+{ question: "acquaint", options: ["知らせる", "法廷", "ヒロイン(女性主人公)", "再生力がある"], correct: 0 },
+{ question: "confront", options: ["直面させる", "移植する 移植", "さまたげる", "広範囲に渡る"], correct: 0 },
+{ question: "equip", options: ["備えつける", "霊長類", "◯◯版", "等しい"], correct: 0 },
+{ question: "endow", options: ["授ける", "広くする", "さらされること", "恥をかかせる"], correct: 0 },
+{ question: "associate", options: ["連想する", "後悔をする", "保証する 保証(書)", "悪化する"], correct: 0 },
+{ question: "admire", options: ["感心する", "建築家，製作者", "解雇する", "含む"], correct: 0 },
+{ question: "commend", options: ["ほめる", "不注意な", "労働人口", "思う，仮定する/(態度を)とる"], correct: 0 },
+{ question: "grateful", options: ["感謝している", "あちこちで見かける", "顔の", "公式化する/明確に述べる"], correct: 0 },
+{ question: "prosecute", options: ["起訴する", "暗示/(複数形で)影響", "打ち勝つ", "霧"], correct: 0 },
+{ question: "forgive", options: ["許す", "よく考えた/慎重な/故意の", "白くする", "においがする"], correct: 0 },
+{ question: "hinder", options: ["さまたげる", "そのような そのような人・物", "全部の", "簡単に"], correct: 0 },
+{ question: "inhibit", options: ["さまたげる", "しっかりにぎる", "旅行", "段階"], correct: 0 },
+{ question: "bar", options: ["禁じる", "適切に", "実行する", "批判"], correct: 0 },
+{ question: "discourage", options: ["落胆させる，やる気をなくさせる", "境界(線)", "当てはまる/申し込む", "炎"], correct: 0 },
+{ question: "complain", options: ["不満を言う", "仕事場", "提案", "明確にする"], correct: 0 },
+{ question: "boast", options: ["自慢する", "レシピ/秘訣", "刑務所", "一度 いったん〜すると"], correct: 0 },
+{ question: "ashamed", options: ["恥ずかしく思って", "目新しい", "納得させる", "ネット関連の"], correct: 0 },
+{ question: "suspect", options: ["疑う(〜ではないかと思う)", "ゆっくり動く", "財産", "捕まえる"], correct: 0 },
+{ question: "doubt", options: ["疑う(〜ではないと思う)", "実演する", "わい、", "航海"], correct: 0 },
+{ question: "beaat", options: ["打ち負かす", "〜に関して", "考え", "消えていく"], correct: 0 },
+{ question: "befeat", options: ["打ち負かす", "信じられないほど", "恐竜", "天文学"], correct: 0 },
+{ question: "accuse", options: ["(〜のことで)責める", "半径", "極端に", "進行している"], correct: 0 },
+{ question: "blame", options: ["責める", "重点を置く", "受け取ること", "ずるがしこい"], correct: 0 },
+{ question: "charge", options: ["請求する/非難する", "慰める", "勇敢な", "広く行き渡った"], correct: 0 },
+{ question: "withstand", options: ["耐える", "従う", "破産した", "殺人 殺害する"], correct: 0 },
+{ question: "withdraw", options: ["引き出す", "理論を立てる", "食事", "不便"], correct: 0 },
+{ question: "withhold", options: ["与えない", "すばやい", "出席している/現在の", "伝えられるところでは"], correct: 0 },
+{ question: "resolve", options: ["決心する", "跡", "知的な", "従う"], correct: 0 },
+{ question: "dissolve", options: ["解散する", "備えつける", "楽しい", "賞"], correct: 0 },
+{ question: "cooperate", options: ["協力する", "マンモス", "社長/大統領", "不満を言う"], correct: 0 },
+{ question: "doze", options: ["うたた寝する", "海の", "半島", "期限が切れる"], correct: 0 },
+{ question: "formerly", options: ["以前は", "商人", "傾向がある", "リハーサル(予行演習)"], correct: 0 },
+{ question: "widow", options: ["未亡人", "避ける", "マンモス", "古風な"], correct: 0 },
+{ question: "flesh", options: ["肉", "異議を唱える", "同封する", "ニート(若年無業者)"], correct: 0 },
+{ question: "fresh", options: ["新鮮な", "驚くほどの", "素晴らしい", "乱用 乱用する"], correct: 0 },
+{ question: "frame", options: ["枠", "職業", "〜に関して", "主張"], correct: 0 },
+{ question: "flame", options: ["炎", "ぜひ", "だます", "下げる 低く"], correct: 0 },
+{ question: "gross", options: ["全部の", "不況", "あえて～する", "生物学上の"], correct: 0 },
+{ question: "gloss", options: ["光沢", "吹きかける", "地下", "些細なこと"], correct: 0 },
+{ question: "personal", options: ["個人的な", "(結果など)を(…に)帰する", "食器棚", "場合"], correct: 0 },
+{ question: "personnel", options: ["職員", "住民", "境界(線)", "塔"], correct: 0 },
+{ question: "conscience", options: ["良心", "言及する", "法廷", "骨格"], correct: 0 },
+{ question: "conscientious", options: ["良心的な", "ワニ", "偶然に，誤って", "堅い"], correct: 0 },
+{ question: "NEET", options: ["ニート(若年無業者)", "消す", "～より長生きする", "被害者"], correct: 0 },
+{ question: "neat", options: ["(身だしなみが)きちんとした", "感謝", "詰め込む", "名誉 栄光に思わせる"], correct: 0 },
+{ question: "conversation", options: ["会話", "教育", "跡", "禁じる"], correct: 0 },
+{ question: "conservation", options: ["(環境の)保護", "複雑な", "試みる 試み", "おめでたの(妊娠中の)"], correct: 0 },
+{ question: "devote", options: ["捧げる", "誤解する", "(兄弟姉妹間で)年上の", "(〜のことで)責める"], correct: 0 },
+{ question: "devoted", options: ["献身的な", "長所", "与える/降伏する", "写真撮影"], correct: 0 },
+{ question: "dedicate", options: ["捧げる", "表面的な", "厳粛な", "伝える"], correct: 0 },
+{ question: "replace", options: ["取り替える", "うたた寝する", "相続する/(遺伝的に)受け継ぐ", "終わらせる"], correct: 0 },
+{ question: "expose", options: ["さらす", "目が利く", "小さな粒", "繁栄する"], correct: 0 },
+{ question: "exposure", options: ["さらされること", "引き出す", "ニート(若年無業者)", "将来"], correct: 0 },
+{ question: "precede", options: ["先に行く", "10億", "片づける", "目撃する"], correct: 0 },
+{ question: "celebrate", options: ["祝う", "死亡", "自信", "肥沃/出生"], correct: 0 },
+{ question: "reward", options: ["報いる", "無知", "以前の，前者の", "クスッと笑う"], correct: 0 },
+    ];
+
+    let totalQuestions = 5;
+    let currentQuestion = 0;
+    let score = 0;
+    let availableQuestions = [];
+    let selectedAnswer = null;
+    let currentCorrectIndex = -1;
+    let isAnswered = false; // 回答済みフラグ
+    let autoNextTimer = null; // 自動進行タイマー
+
+    const startScreen = document.getElementById('startScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const questionCountInput = document.getElementById('questionCount');
+    const startBtn = document.getElementById('startBtn');
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const resultEl = document.getElementById('result');
+    const progressEl = document.getElementById('progress');
+    const finalScoreEl = document.getElementById('finalScore');
+    const accuracyEl = document.getElementById('accuracy');
+
+    // 開始ボタン
+    startBtn.onclick = () => {
+      let input = parseInt(questionCountInput.value);
+      if (isNaN(input) || input < 1) input = 1;
+      if (input > quizData.length) input = quizData.length;
+      totalQuestions = input;
+
+      startScreen.classList.remove('active');
+      quizScreen.classList.add('active');
+
+      currentQuestion = 0;
+      score = 0;
+      availableQuestions = [...quizData];
+      loadQuestion();
+    };
+
+    // 問題読み込み
+    function loadQuestion() {
+      if (currentQuestion >= totalQuestions) {
+        showResult();
+        return;
+      }
+
+      // タイマークリア
+      if (autoNextTimer) clearTimeout(autoNextTimer);
+
+      const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+      const q = availableQuestions[randomIndex];
+
+      currentQuestion++;
+      questionEl.textContent = q.question;
+      progressEl.textContent = `問題 ${currentQuestion}/${totalQuestions}`;
+
+      // 選択肢シャッフル
+      const indices = [0, 1, 2, 3];
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      currentCorrectIndex = indices.indexOf(q.correct);
+
+      const optionIdBase = `option-${currentQuestion}-${Date.now()}`;
+      optionsEl.innerHTML = '';
+      indices.forEach((origIdx, shuffledIdx) => {
+        const id = `${optionIdBase}-${shuffledIdx}`;
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <label for="${id}">
+            <input type="radio" id="${id}" name="answer" value="${shuffledIdx}">
+            ${q.options[origIdx]}
+          </label>
+        `;
+        optionsEl.appendChild(li);
+      });
+
+    // キャンセルボタン
+    cancelBtn.onclick = () => {
+      if (confirm("クイズをキャンセルしますか？\n（進捗は保存されません）")) {
+        cancelQuiz();
+      }
+    };
+
+    // キャンセル処理
+    function cancelQuiz() {
+      if (autoNextTimer) clearTimeout(autoNextTimer);
+      quizScreen.classList.remove('active');
+      startScreen.classList.add('active');
+
+      // 状態リセット
+      currentQuestion = 0;
+      score = 0;
+      selectedQuestions = [];
+      selectedAnswer = null;
+      isAnswered = false;
+    }
+      // 状態リセット
+      isAnswered = false;
+      selectedAnswer = null;
+      resultEl.textContent = '';
+      resultEl.className = "result";
+
+      // 選択肢クリック → 即判定
+      document.querySelectorAll('input[name="answer"]').forEach(radio => {
+        radio.onchange = () => {
+          if (isAnswered) return;
+          isAnswered = true;
+          selectedAnswer = parseInt(radio.value);
+          judgeAnswer();
+        };
+      });
+
+      // 使用済み削除
+      availableQuestions.splice(randomIndex, 1);
+    }
+
+    // 回答判定
+    function judgeAnswer() {
+      // 選択肢無効化
+      document.querySelectorAll('input[name="answer"]').forEach(radio => {
+        radio.disabled = true;
+        radio.parentElement.classList.add('disabled');
+      });
+
+      const correctLabel = optionsEl.children[currentCorrectIndex].querySelector('label');
+      correctLabel.classList.add('correct-highlight');
+
+      if (selectedAnswer !== currentCorrectIndex) {
+        const selectedLabel = optionsEl.children[selectedAnswer].querySelector('label');
+        selectedLabel.classList.add('incorrect-highlight');
+      }
+
+      // 正誤表示
+      if (selectedAnswer === currentCorrectIndex) {
+        score++;
+        resultEl.textContent = "正解！";
+        resultEl.className = "result correct";
+      } else {
+        const correctText = correctLabel.textContent.trim();
+        resultEl.innerHTML = `不正解…<br>正解は「<strong>${correctText}</strong>」です。`;
+        resultEl.className = "result incorrect";
+      }
+
+      // 2秒後に次へ
+      autoNextTimer = setTimeout(() => {
+        loadQuestion();
+      }, 2000);
+    }
+
+    // 結果表示
+    function showResult() {
+      if (autoNextTimer) clearTimeout(autoNextTimer);
+      quizScreen.classList.remove('active');
+      resultScreen.classList.add('active');
+      const accuracy = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+      finalScoreEl.textContent = `得点: ${score} / ${totalQuestions}`;
+      accuracyEl.textContent = `正答率: ${accuracy}%`;
+    }
+  </script>
+
+</body>
+</html>
