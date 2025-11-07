@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Stock4500 - 間違い問題リスト</title>
+  <link rel="icon" href="https://lh7-rt.googleusercontent.com/slidesz/AGV_vUctC95Tu99-RUGtSsRa7JCpKd1-JgUVm6J21aai3oFSZJuxSvV43A2n3IugfQwGGVyl8ACZxEdGCCj0lBs0HGvMbCgqYXDQV-28H9ovg29sICNOzaX5XCDpZTvtFH-jdakZ8U6LgFQDTStB-7e95u6U7j9hAg=nw?key=HN2h_traoN9V8eXyLO-uUA">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      color: #8a2be2;
+      margin-bottom: 20px;
+    }
+    .stats {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+    }
+    .mistake-item {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      text-align: left;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mistake-content {
+      flex: 1;
+    }
+    .mistake-question {
+      font-weight: bold;
+      color: #856404;
+      margin-bottom: 8px;
+      font-size: 1.1em;
+    }
+    .mistake-correct {
+      color: #28a745;
+      font-weight: 500;
+      font-size: 0.95em;
+    }
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.8em;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .delete-btn:hover {
+      background: #c82333;
+    }
+    .controls {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 1em;
+    }
+    .clear-btn {
+      background: #dc3545;
+      color: white;
+    }
+    .clear-btn:hover {
+      background: #c82333;
+    }
+    .export-btn {
+      background: #28a745;
+      color: white;
+    }
+    .export-btn:hover {
+      background: #218838;
+    }
+    .back-btn {
+      background: #6c757d;
+      color: white;
+    }
+    .back-btn:hover {
+      background: #5a6268;
+    }
+    .empty-state {
+      color: #6c757d;
+      font-style: italic;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>間違えた問題リスト</h2>
+    
+    <div class="stats" id="stats">
+      まだ間違えた問題はありません
+    </div>
+
+    <div id="mistakesList" class="empty-state">
+      クイズで間違えた問題がここに表示されます
+    </div>
+
+    <div class="controls">
+      <button onclick="clearMistakes()" class="clear-btn">全クリア</button>
+      <button onclick="location.href='index.html'" class="back-btn">クイズに戻る</button>
+    </div>
+  </div>
+
+  <script>
+    let mistakes = [];
+
+    // 間違い問題を読み込み
+    function loadMistakes() {
+      const saved = localStorage.getItem('stock4500_mistakes');
+      if (saved) {
+        mistakes = JSON.parse(saved);
+      }
+      displayMistakes();
+    }
+    function displayMistakes() {
+      const listEl = document.getElementById('mistakesList');
+      const statsEl = document.getElementById('stats');
+
+      if (mistakes.length === 0) {
+        statsEl.textContent = 'まだ間違えた問題はありません';
+        listEl.innerHTML = '<div class="empty-state">クイズで間違えた問題がここに表示されます</div>';
+        return;
+      }
+
+      statsEl.innerHTML = `合計 <strong>${mistakes.length}</strong> 問間違えました`;
+
+      listEl.innerHTML = mistakes.map((mistake, index) => `
+        <div class="mistake-item">
+          <div class="mistake-content">
+            <div class="mistake-question">${index + 1}. ${mistake.question}</div>
+            <div class="mistake-correct">${mistake.correct}</div>
+          </div>
+          <button class="delete-btn" onclick="deleteMistake(${index})">削除</button>
+        </div>
+      `).join('');
+    }
+
+    // 1問だけ削除
+    function deleteMistake(index) {
+      if (confirm(`この問題を削除しますか？\n\n${mistakes[index].question}`)) {
+        mistakes.splice(index, 1);
+        localStorage.setItem('stock4500_mistakes', JSON.stringify(mistakes));
+        displayMistakes();
+        alert('削除しました');
+      }
+    }
+
+    // 全クリア
+    function clearMistakes() {
+      if (mistakes.length === 0) {
+        alert('削除する問題がありません');
+        return;
+      }
+      if (confirm(`すべての間違い問題（${mistakes.length}問）を削除しますか？`)) {
+        localStorage.removeItem('stock4500_mistakes');
+        mistakes = [];
+        displayMistakes();
+        alert('すべてクリアしました');
+      }
+    }
+    // ページ読み込み
+    window.addEventListener('load', loadMistakes);
+  </script>
+
+</body>
+</html>
