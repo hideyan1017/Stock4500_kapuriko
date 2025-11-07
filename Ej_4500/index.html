@@ -2402,6 +2402,7 @@
     let isAnswered = false;
     let autoNextTimer = null;
     let totalQuestions = 20;
+    let mistakes = [];
 
     const startScreen = document.getElementById('startScreen');
     const quizScreen = document.getElementById('quizScreen');
@@ -2417,89 +2418,81 @@
     const progressEl = document.getElementById('progress');
     const finalScoreEl = document.getElementById('finalScore');
     const accuracyEl = document.getElementById('accuracy');
+    const mistakeLink = document.getElementById('mistakeLink');
 
-    // 設定を保存
     function saveSettings() {
-      const settings = {
-        start: startNumInput.value,
-        end: endNumInput.value,
-        count: questionCountInput.value
-      };
+      const settings = { start: startNumInput.value, end: endNumInput.value, count: questionCountInput.value };
       localStorage.setItem('stock4500_settings', JSON.stringify(settings));
     }
 
-    // 設定を復元
     function loadSettings() {
       const saved = localStorage.getItem('stock4500_settings');
       if (saved) {
-        const settings = JSON.parse(saved);
-        startNumInput.value = settings.start || 1;
-        endNumInput.value = settings.end || 100;
-        questionCountInput.value = settings.count || 20;
+        const s = JSON.parse(saved);
+        startNumInput.value = s.start || 1;
+        endNumInput.value = s.end || 100;
+        questionCountInput.value = s.count || 20;
       }
     }
 
-    // 入力が変わるたびに保存
+    function saveMistake(question, selected, correct) {
+      const mistake = { timestamp: new Date().toLocaleString('ja-JP'), question, selected, correct };
+      mistakes.push(mistake);
+      localStorage.setItem('stock4500_mistakes', JSON.stringify(mistakes));
+    }
+
+    function loadMistakes() {
+      const saved = localStorage.getItem('stock4500_mistakes');
+      if (saved) mistakes = JSON.parse(saved);
+    }
+
+    function updateMistakeLink() {
+      if (mistakes.length > 0) {
+        mistakeLink.style.display = 'inline-block';
+        mistakeLink.textContent = `間違えた問題を見る (${mistakes.length}問)`;
+      } else {
+        mistakeLink.style.display = 'none';
+      }
+    }
+
     startNumInput.addEventListener('input', saveSettings);
     endNumInput.addEventListener('input', saveSettings);
     questionCountInput.addEventListener('input', saveSettings);
+    window.addEventListener('load', () => { loadSettings(); loadMistakes(); updateMistakeLink(); });
 
-    // ページ読み込み時に復元
-    window.addEventListener('load', loadSettings);
-
-    // 開始ボタン
     startBtn.onclick = () => {
-      saveSettings(); // 開始時にも保存
+      saveSettings();
+      loadMistakes();
 
-      let start = parseInt(startNumInput.value);
-      let end = parseInt(endNumInput.value);
-      let count = parseInt(questionCountInput.value);
-
+      let start = parseInt(startNumInput.value), end = parseInt(endNumInput.value), count = parseInt(questionCountInput.value);
       if (isNaN(start) || start < 1) start = 1;
       if (isNaN(end) || end > quizData.length) end = quizData.length;
       if (start > end) [start, end] = [end, start];
       if (isNaN(count) || count < 1) count = 1;
 
       const rangeQuestions = quizData.slice(start - 1, end);
-      const rangeSize = rangeQuestions.length;
-      totalQuestions = Math.min(count, rangeSize);
-
-      selectedQuestions = [...rangeQuestions]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, totalQuestions);
+      totalQuestions = Math.min(count, rangeQuestions.length);
+      selectedQuestions = [...rangeQuestions].sort(() => Math.random() - 0.5).slice(0, totalQuestions);
 
       startScreen.classList.remove('active');
       quizScreen.classList.add('active');
-
-      currentQuestion = 0;
-      score = 0;
+      currentQuestion = 0; score = 0;
       loadQuestion();
     };
 
-    // キャンセルボタン
     cancelBtn.onclick = () => {
-      if (confirm("クイズをキャンセルしますか？\n（進捗は保存されません）")) {
-        cancelQuiz();
-      }
+      if (confirm("クイズをキャンセルしますか？")) cancelQuiz();
     };
 
     function cancelQuiz() {
       if (autoNextTimer) clearTimeout(autoNextTimer);
       quizScreen.classList.remove('active');
       startScreen.classList.add('active');
-      currentQuestion = 0;
-      score = 0;
-      selectedQuestions = [];
-      selectedAnswer = null;
-      isAnswered = false;
+      currentQuestion = 0; score = 0; selectedQuestions = []; selectedAnswer = null; isAnswered = false;
     }
 
     function loadQuestion() {
-      if (currentQuestion >= totalQuestions) {
-        showResult();
-        return;
-      }
-
+      if (currentQuestion >= totalQuestions) { showResult(); return; }
       if (autoNextTimer) clearTimeout(autoNextTimer);
 
       const q = selectedQuestions[currentQuestion];
@@ -2507,7 +2500,7 @@
       questionEl.textContent = q.question;
       progressEl.textContent = `問題 ${currentQuestion}/${totalQuestions}`;
 
-      const indices = [0, 1, 2, 3];
+      const indices = [0,1,2,3];
       for (let i = indices.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [indices[i], indices[j]] = [indices[j], indices[i]];
@@ -2519,42 +2512,32 @@
       indices.forEach((origIdx, shuffledIdx) => {
         const id = `${optionIdBase}-${shuffledIdx}`;
         const li = document.createElement('li');
-        li.innerHTML = `
-          <label for="${id}">
-            <input type="radio" id="${id}" name="answer" value="${shuffledIdx}">
-            ${q.options[origIdx]}
-          </label>
-        `;
+        li.innerHTML = `<label for="${id}"><input type="radio" id="${id}" name="answer" value="${shuffledIdx}">${q.options[origIdx]}</label>`;
         optionsEl.appendChild(li);
       });
 
-      isAnswered = false;
-      selectedAnswer = null;
-      resultEl.textContent = '';
-      resultEl.className = "result";
+      isAnswered = false; selectedAnswer = null; resultEl.textContent = ''; resultEl.className = "result";
 
       document.querySelectorAll('input[name="answer"]').forEach(radio => {
-        radio.onchange = () => {
-          if (isAnswered) return;
-          isAnswered = true;
-          selectedAnswer = parseInt(radio.value);
-          judgeAnswer();
-        };
+        radio.onchange = () => { if (!isAnswered) { isAnswered = true; selectedAnswer = parseInt(radio.value); judgeAnswer(); } };
       });
     }
 
     function judgeAnswer() {
+      const q = selectedQuestions[currentQuestion - 1]; // ← ここが修正点！
+
       document.querySelectorAll('input[name="answer"]').forEach(radio => {
         radio.disabled = true;
         radio.parentElement.classList.add('disabled');
       });
 
       const correctLabel = optionsEl.children[currentCorrectIndex].querySelector('label');
+      const selectedLabel = optionsEl.children[selectedAnswer].querySelector('label');
       correctLabel.classList.add('correct-highlight');
 
       if (selectedAnswer !== currentCorrectIndex) {
-        const selectedLabel = optionsEl.children[selectedAnswer].querySelector('label');
         selectedLabel.classList.add('incorrect-highlight');
+        saveMistake(q.question, selectedLabel.textContent.trim(), correctLabel.textContent.trim());
       }
 
       if (selectedAnswer === currentCorrectIndex) {
@@ -2562,14 +2545,11 @@
         resultEl.textContent = "正解！";
         resultEl.className = "result correct";
       } else {
-        const correctText = correctLabel.textContent.trim();
-        resultEl.innerHTML = `不正解…<br>正解は「<strong>${correctText}</strong>」です。`;
+        resultEl.innerHTML = `不正解…<br>正解は「<strong>${correctLabel.textContent.trim()}</strong>」です。`;
         resultEl.className = "result incorrect";
       }
 
-      autoNextTimer = setTimeout(() => {
-        loadQuestion();
-      }, 2000);
+      autoNextTimer = setTimeout(loadQuestion, 2000);
     }
 
     function showResult() {
@@ -2579,6 +2559,7 @@
       const accuracy = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
       finalScoreEl.textContent = `得点: ${score} / ${totalQuestions}`;
       accuracyEl.textContent = `正答率: ${accuracy}%`;
+      updateMistakeLink();
     }
   </script>
 
