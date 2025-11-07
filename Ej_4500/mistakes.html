@@ -148,8 +148,6 @@
       }
       displayMistakes();
     }
-
-    // 間違い問題を表示（選択肢・日付なし）
     function displayMistakes() {
       const listEl = document.getElementById('mistakesList');
       const statsEl = document.getElementById('stats');
@@ -166,7 +164,7 @@
         <div class="mistake-item">
           <div class="mistake-content">
             <div class="mistake-question">${index + 1}. ${mistake.question}</div>
-            <div class="mistake-correct">正解: ${mistake.correct}</div>
+            <div class="mistake-correct">${mistake.correct}</div>
           </div>
           <button class="delete-btn" onclick="deleteMistake(${index})">削除</button>
         </div>
