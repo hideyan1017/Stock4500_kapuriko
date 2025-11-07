@@ -118,9 +118,8 @@
     </div>
 
     <div class="controls">
-      <button onclick="exportMistakes()" class="export-btn">エクスポート（コピー）</button>
       <button onclick="clearMistakes()" class="clear-btn">全クリア</button>
-      <button onclick="location.href='index.html'" class="back-btn">クイズに戻る</button>
+      <button onclick="location.href='https://stock4500-quiz.netlify.app/ej_4500/'" class="back-btn">クイズに戻る</button>
     </div>
   </div>
 
@@ -159,31 +158,6 @@
           </div>
         </div>
       `).join('');
-    }
-
-    // エクスポート（クリップボードにコピー）
-    function exportMistakes() {
-      if (mistakes.length === 0) {
-        alert('エクスポートする間違い問題がありません');
-        return;
-      }
-
-      const text = mistakes.map((m, i) => 
-        `${i+1}. ${m.question}\n   選択: ${m.selected} | 正解: ${m.correct}\n   ${m.timestamp}`
-      ).join('\n\n');
-
-      navigator.clipboard.writeText(text).then(() => {
-        alert(` ${mistakes.length} 問をクリップボードにコピーしました！`);
-      }).catch(() => {
-        // フォールバック：テキストエリアで表示
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        alert(` ${mistakes.length} 問をコピーしました！`);
-      });
     }
 
     // 全クリア
