@@ -2438,6 +2438,35 @@
         questionCountInput.value = settings.count || 20;
       }
     }
+    // 間違い問題を保存
+    function saveMistake(question, selectedOption, correctOption) {
+      const mistake = {
+        timestamp: new Date().toLocaleString('ja-JP'),
+        question: question,
+        selected: selectedOption,
+        correct: correctOption
+      };
+      mistakes.push(mistake);
+      localStorage.setItem('stock4500_mistakes', JSON.stringify(mistakes));
+    }
+
+    // 間違い問題を読み込み
+    function loadMistakes() {
+      const saved = localStorage.getItem('stock4500_mistakes');
+      if (saved) {
+        mistakes = JSON.parse(saved);
+      }
+    }
+
+    // 間違いリンクの表示制御
+    function updateMistakeLink() {
+      if (mistakes.length > 0) {
+        mistakeLink.style.display = 'inline-block';
+        mistakeLink.textContent = `間違えた問題を見る (${mistakes.length}問)`;
+      } else {
+        mistakeLink.style.display = 'none';
+      }
+    }
 
     // 入力が変わるたびに保存
     startNumInput.addEventListener('input', saveSettings);
