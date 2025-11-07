@@ -132,7 +132,6 @@
     </div>
 
     <div class="controls">
-      <button onclick="exportMistakes()" class="export-btn">エクスポート（コピー）</button>
       <button onclick="clearMistakes()" class="clear-btn">全クリア</button>
       <button onclick="location.href='index.html'" class="back-btn">クイズに戻る</button>
     </div>
@@ -197,31 +196,6 @@
         alert('すべてクリアしました');
       }
     }
-
-    // エクスポート（問題 + 正解のみ）
-    function exportMistakes() {
-      if (mistakes.length === 0) {
-        alert('エクスポートする問題がありません');
-        return;
-      }
-
-      const text = mistakes.map((m, i) => 
-        `${i+1}. ${m.question}\n   正解: ${m.correct}`
-      ).join('\n\n');
-
-      navigator.clipboard.writeText(text).then(() => {
-        alert(`${mistakes.length} 問をクリップボードにコピーしました！`);
-      }).catch(() => {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        alert(`${mistakes.length} 問をコピーしました！`);
-      });
-    }
-
     // ページ読み込み
     window.addEventListener('load', loadMistakes);
   </script>
