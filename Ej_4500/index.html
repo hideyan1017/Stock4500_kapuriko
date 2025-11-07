@@ -2402,6 +2402,7 @@
     let isAnswered = false;
     let autoNextTimer = null;
     let totalQuestions = 20;
+    let mistakes = []; // 間違い問題リスト
 
     const startScreen = document.getElementById('startScreen');
     const quizScreen = document.getElementById('quizScreen');
@@ -2417,8 +2418,9 @@
     const progressEl = document.getElementById('progress');
     const finalScoreEl = document.getElementById('finalScore');
     const accuracyEl = document.getElementById('accuracy');
+    const mistakeLink = document.getElementById('mistakeLink');
 
-    // 設定を保存
+    // 設定を保存・復元
     function saveSettings() {
       const settings = {
         start: startNumInput.value,
@@ -2428,7 +2430,6 @@
       localStorage.setItem('stock4500_settings', JSON.stringify(settings));
     }
 
-    // 設定を復元
     function loadSettings() {
       const saved = localStorage.getItem('stock4500_settings');
       if (saved) {
@@ -2438,6 +2439,7 @@
         questionCountInput.value = settings.count || 20;
       }
     }
+
     // 間違い問題を保存
     function saveMistake(question, selectedOption, correctOption) {
       const mistake = {
@@ -2468,17 +2470,22 @@
       }
     }
 
-    // 入力が変わるたびに保存
+    // 入力イベント
     startNumInput.addEventListener('input', saveSettings);
     endNumInput.addEventListener('input', saveSettings);
     questionCountInput.addEventListener('input', saveSettings);
 
-    // ページ読み込み時に復元
-    window.addEventListener('load', loadSettings);
+    // ページ読み込み
+    window.addEventListener('load', () => {
+      loadSettings();
+      loadMistakes();
+      updateMistakeLink();
+    });
 
     // 開始ボタン
     startBtn.onclick = () => {
-      saveSettings(); // 開始時にも保存
+      saveSettings();
+      loadMistakes(); // 間違いリストをリロード
 
       let start = parseInt(startNumInput.value);
       let end = parseInt(endNumInput.value);
@@ -2579,11 +2586,13 @@
       });
 
       const correctLabel = optionsEl.children[currentCorrectIndex].querySelector('label');
+      const selectedLabel = optionsEl.children[selectedAnswer].querySelector('label');
       correctLabel.classList.add('correct-highlight');
 
       if (selectedAnswer !== currentCorrectIndex) {
-        const selectedLabel = optionsEl.children[selectedAnswer].querySelector('label');
         selectedLabel.classList.add('incorrect-highlight');
+        // 間違いを保存
+        saveMistake(q.question, selectedLabel.textContent.trim(), correctLabel.textContent.trim());
       }
 
       if (selectedAnswer === currentCorrectIndex) {
@@ -2591,8 +2600,7 @@
         resultEl.textContent = "正解！";
         resultEl.className = "result correct";
       } else {
-        const correctText = correctLabel.textContent.trim();
-        resultEl.innerHTML = `不正解…<br>正解は「<strong>${correctText}</strong>」です。`;
+        resultEl.innerHTML = `不正解…<br>正解は「<strong>${correctLabel.textContent.trim()}</strong>」です。`;
         resultEl.className = "result incorrect";
       }
 
@@ -2608,6 +2616,7 @@
       const accuracy = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
       finalScoreEl.textContent = `得点: ${score} / ${totalQuestions}`;
       accuracyEl.textContent = `正答率: ${accuracy}%`;
+      updateMistakeLink();
     }
   </script>
 
