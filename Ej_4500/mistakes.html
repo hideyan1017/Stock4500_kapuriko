@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Stock4500 - 間違い問題リスト</title>
+  <link rel="icon" href="https://lh7-rt.googleusercontent.com/slidesz/AGV_vUctC95Tu99-RUGtSsRa7JCpKd1-JgUVm6J21aai3oFSZJuxSvV43A2n3IugfQwGGVyl8ACZxEdGCCj0lBs0HGvMbCgqYXDQV-28H9ovg29sICNOzaX5XCDpZTvtFH-jdakZ8U6LgFQDTStB-7e95u6U7j9hAg=nw?key=HN2h_traoN9V8eXyLO-uUA">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      color: #8a2be2;
+      margin-bottom: 20px;
+    }
+    .stats {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+    }
+    .mistake-item {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      text-align: left;
+    }
+    .mistake-question {
+      font-weight: bold;
+      color: #856404;
+      margin-bottom: 8px;
+      font-size: 1.1em;
+    }
+    .mistake-details {
+      color: #6c757d;
+      font-size: 0.9em;
+    }
+    .mistake-selected {
+      color: #dc3545;
+      font-weight: 500;
+    }
+    .mistake-correct {
+      color: #28a745;
+      font-weight: 500;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      background: #962dff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 1em;
+    }
+    button:hover {
+      background: #660099;
+    }
+    .clear-btn {
+      background: #dc3545;
+    }
+    .clear-btn:hover {
+      background: #c82333;
+    }
+    .export-btn {
+      background: #28a745;
+    }
+    .export-btn:hover {
+      background: #218838;
+    }
+    .back-btn {
+      background: #6c757d;
+    }
+    .back-btn:hover {
+      background: #5a6268;
+    }
+    .empty-state {
+      color: #6c757d;
+      font-style: italic;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>間違えた問題リスト</h2>
+    
+    <div class="stats" id="stats">
+      まだ間違えた問題はありません
+    </div>
+
+    <div id="mistakesList" class="empty-state">
+      クイズで間違えた問題がここに表示されます
+    </div>
+
+    <div class="controls">
+      <button onclick="exportMistakes()" class="export-btn">エクスポート（コピー）</button>
+      <button onclick="clearMistakes()" class="clear-btn">全クリア</button>
+      <button onclick="location.href='index.html'" class="back-btn">クイズに戻る</button>
+    </div>
+  </div>
+
+  <script>
+    let mistakes = [];
+
+    // 間違い問題を読み込み
+    function loadMistakes() {
+      const saved = localStorage.getItem('stock4500_mistakes');
+      if (saved) {
+        mistakes = JSON.parse(saved);
+      }
+      displayMistakes();
+    }
+
+    // 間違い問題を表示
+    function displayMistakes() {
+      const listEl = document.getElementById('mistakesList');
+      const statsEl = document.getElementById('stats');
+
+      if (mistakes.length === 0) {
+        statsEl.textContent = 'まだ間違えた問題はありません';
+        listEl.innerHTML = '<div class="empty-state">クイズで間違えた問題がここに表示されます</div>';
+        return;
+      }
+
+      statsEl.innerHTML = `合計 ${mistakes.length} 問間違えました (最新: ${mistakes[mistakes.length - 1].timestamp})`;
+
+      listEl.innerHTML = mistakes.map((mistake, index) => `
+        <div class="mistake-item">
+          <div class="mistake-question">${index + 1}. ${mistake.question}</div>
+          <div class="mistake-details">
+            <span class="mistake-selected">選択: ${mistake.selected}</span> | 
+            <span class="mistake-correct">正解: ${mistake.correct}</span> | 
+            <span>${mistake.timestamp}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // エクスポート（クリップボードにコピー）
+    function exportMistakes() {
+      if (mistakes.length === 0) {
+        alert('エクスポートする間違い問題がありません');
+        return;
+      }
+
+      const text = mistakes.map((m, i) => 
+        `${i+1}. ${m.question}\n   選択: ${m.selected} | 正解: ${m.correct}\n   ${m.timestamp}`
+      ).join('\n\n');
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert(` ${mistakes.length} 問をクリップボードにコピーしました！`);
+      }).catch(() => {
+        // フォールバック：テキストエリアで表示
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert(` ${mistakes.length} 問をコピーしました！`);
+      });
+    }
+
+    // 全クリア
+    function clearMistakes() {
+      if (confirm('間違い問題リストをすべて削除しますか？')) {
+        localStorage.removeItem('stock4500_mistakes');
+        mistakes = [];
+        displayMistakes();
+        alert('間違いリストをクリアしました');
+      }
+    }
+
+    // ページ読み込み
+    window.addEventListener('load', loadMistakes);
+  </script>
+
+</body>
+</html>
