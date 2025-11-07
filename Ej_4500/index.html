@@ -2417,31 +2417,6 @@
     const progressEl = document.getElementById('progress');
     const finalScoreEl = document.getElementById('finalScore');
     const accuracyEl = document.getElementById('accuracy');
-     let mistakes = []; // 間違い問題リスト
-
-    let currentQuestion = 0;
-    let score = 0;
-    let selectedQuestions = [];
-    let selectedAnswer = null;
-    let currentCorrectIndex = -1;
-    let isAnswered = false;
-    let autoNextTimer = null;
-    let totalQuestions = 20;
-
-    const startScreen = document.getElementById('startScreen');
-    const quizScreen = document.getElementById('quizScreen');
-    const resultScreen = document.getElementById('resultScreen');
-    const startNumInput = document.getElementById('startNum');
-    const endNumInput = document.getElementById('endNum');
-    const questionCountInput = document.getElementById('questionCount');
-    const startBtn = document.getElementById('startBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const questionEl = document.getElementById('question');
-    const optionsEl = document.getElementById('options');
-    const resultEl = document.getElementById('result');
-    const progressEl = document.getElementById('progress');
-    const finalScoreEl = document.getElementById('finalScore');
-    const accuracyEl = document.getElementById('accuracy');
 
     // 設定を保存
     function saveSettings() {
